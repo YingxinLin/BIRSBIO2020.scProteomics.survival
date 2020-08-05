@@ -2,3 +2,8 @@
 .github
 Dockerfile
 _pkgdown.yml
+^.*\.Rproj$
+^\.Rproj\.user$
+^data$
+^doc$
+^Meta$

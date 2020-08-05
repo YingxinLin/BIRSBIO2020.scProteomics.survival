@@ -1,28 +1,38 @@
-Package: BuildABiocWorkshop2020
-Title: Bioconductor Workshop Template and Github Actions
+Package: BIRSBIO2020.scProteomics.survival
+Title: scProteomics survival analysis for BIRS2020
 Version: 0.1.1
 Authors@R: 
-    person(given = "Sean",
-           family = "Davis",
+    person(given = "Yingxin",
+           family = "Lin",
            role = c("aut", "cre"),
-           email = "seandavi@gmail.com",
-           comment = c(ORCID = "your-orc-id-here"))
-Description: This package serves as a template for using github actions to 
-    prepare a Bioconductor Workshop package for use. In particular,
-    a pkgdown website and docker image are generated based on workflow 
-    settings. 
+           email = "yingxin.lin@sydney.edu.au")
+Description: This package is the scProteomics analysis for BIRS2020, utilising spatial features for survival prediction of breast cancer patients.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
-Depends: 
-    Biobase
+Depends: R (>= 3.5.0)
+Imports: 
+    Biobase,
+    SingleCellExperiment,
+    scater,
+    ggthemes,
+    ggplot2,
+    ggridges,
+    plyr,
+    raster,
+    gridExtra,
+    sp,
+    spatstat,
+    uwot,
+    pheatmap,
+    data.table
 Suggests: 
     knitr,
     rmarkdown,
     pkgdown
-URL: https://seandavi.github.io/BuildABiocWorkshop2020/
-BugReports: https://github.com/seandavi/BuildABiocWorkshop2020/issues/new/choose
+URL: https://yingxinlin.github.io/BIRSBIO2020.scProteomics.survival/
+BugReports: https://github.com/yingxinlin/BIRSBIO2020.scProteomics.survival/issues/new/choose
 VignetteBuilder: knitr
-DockerImage: seandavi/buildabiocworkshop2020:latest
+DockerImage: yingxinlin/BIRSBIO2020.scProteomics.survival:latest
