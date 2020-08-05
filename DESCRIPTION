@@ -30,7 +30,14 @@ Imports:
     data.table,
     ggpubr,
     ape,
-    viridis
+    viridis,
+    rgdal,
+    RColorBrewer,
+    igraph,
+    scran,
+    scattermore,
+    survival,
+    survminer
 Suggests: 
     knitr,
     rmarkdown,

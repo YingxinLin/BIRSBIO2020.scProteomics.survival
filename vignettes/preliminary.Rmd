@@ -1,7 +1,15 @@
 ---
 title: "Preliminary Analysis"
 author: "Yingxin Lin"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    code_folding: hide
+    fig_height: 12
+    fig_width: 12
+    toc: yes
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
 vignette: >
   %\VignetteIndexEntry{Preliminary Analysis}
   %\VignetteEngine{knitr::rmarkdown}
