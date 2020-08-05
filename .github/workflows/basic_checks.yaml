@@ -28,10 +28,10 @@ jobs:
         env:
           RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
         run: |
+          sudo apt-get install libudunits2-dev libgdal-dev libgeos-dev libproj-dev
           Rscript -e "remotes::install_github('r-hub/sysreqs')"
           sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
           sudo -s eval "$sysreqs"
-          sudo apt-get install libudunits2-dev libgdal-dev libgeos-dev libproj-dev
           
       - name: Install dependencies
         run: |
