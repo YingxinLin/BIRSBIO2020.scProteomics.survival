@@ -94,6 +94,11 @@ r <- raster(str_name)
 ```
 
 ```{r}
+str_name <- "data/p34_labeledcellData.tiff"
+
+
+sample_id <- as.numeric(gsub("data/p", "", gsub("_labeledcellData.tiff", "", str_name)))
+
 r <- readRDS("data/p34_labeledcellData_RasterLayer.rds")
 
 p_sce <- mibi.sce[, mibi.sce$SampleID == sample_id]
