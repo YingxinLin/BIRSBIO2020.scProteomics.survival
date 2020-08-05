@@ -1,15 +1,18 @@
 ---
 title: "Preliminary Analysis"
+author: "Yingxin Lin"
 output: rmarkdown::html_vignette
 vignette: >
-%\VignetteIndexEntry{Preliminary Analysis}
+  %\VignetteIndexEntry{Preliminary Analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  ---
+---
   
   
-  ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, cache = TRUE, cache.lazy = TRUE)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, 
+                      message = FALSE, cache = TRUE, 
+                      cache.lazy = TRUE)
 ```
 
 

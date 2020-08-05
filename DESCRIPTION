@@ -27,7 +27,10 @@ Imports:
     spatstat,
     uwot,
     pheatmap,
-    data.table
+    data.table,
+    ggpubr,
+    ape,
+    viridis
 Suggests: 
     knitr,
     rmarkdown,
