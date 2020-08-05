@@ -35,4 +35,4 @@ Suggests:
 URL: https://yingxinlin.github.io/BIRSBIO2020.scProteomics.survival/
 BugReports: https://github.com/yingxinlin/BIRSBIO2020.scProteomics.survival/issues/new/choose
 VignetteBuilder: knitr
-DockerImage: yingxinlin/BIRSBIO2020.scProteomics.survival:latest
+DockerImage: yingxinlin/scproteomics:latest
