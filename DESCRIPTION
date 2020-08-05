@@ -31,7 +31,6 @@ Imports:
     ggpubr,
     ape,
     viridis,
-    rgdal,
     RColorBrewer,
     igraph,
     scran,

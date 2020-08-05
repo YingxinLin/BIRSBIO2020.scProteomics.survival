@@ -82,7 +82,7 @@ names(cellTypes_mibi_color) <- c(unique(mibi.sce$cellTypes), "Background")
 # Visualisation of the image
 
 
-```{r}
+```{r eval = FALSE}
 # example
 str_name <- "data/p34_labeledcellData.tiff"
 
@@ -91,7 +91,10 @@ sample_id <- as.numeric(gsub("data/p", "", gsub("_labeledcellData.tiff", "", str
 
 r <- raster(str_name)
 # create an rater object
-r
+```
+
+```{r}
+r <- readRDS("data/p34_labeledcellData_RasterLayer.rds"")
 
 p_sce <- mibi.sce[, mibi.sce$SampleID == sample_id]
 p_sce <- p_sce[interested_protein, ]
