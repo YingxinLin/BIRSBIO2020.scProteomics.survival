@@ -94,7 +94,7 @@ r <- raster(str_name)
 ```
 
 ```{r}
-r <- readRDS("data/p34_labeledcellData_RasterLayer.rds"")
+r <- readRDS("data/p34_labeledcellData_RasterLayer.rds")
 
 p_sce <- mibi.sce[, mibi.sce$SampleID == sample_id]
 p_sce <- p_sce[interested_protein, ]
