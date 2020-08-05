@@ -1,0 +1,295 @@
+---
+title: "Preliminary Analysis"
+output: rmarkdown::html_vignette
+vignette: >
+%\VignetteIndexEntry{Preliminary Analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  ---
+  
+  
+  ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, cache = TRUE, cache.lazy = TRUE)
+```
+
+
+# Data 
+
+```{r}
+library(scater)
+library(SingleCellExperiment)
+library(ggthemes)
+library(ggplot2)
+library(ggridges)
+library(plyr)
+library(raster)
+library(gridExtra)
+library(sp)
+library(spatstat)
+library(uwot)
+library(pheatmap)
+#source("R/image_analysis_function.R")
+set.seed(2020)
+```
+
+
+## Keren et al. 
+
+
+```{r}
+load("data/mibiSCE.rda")
+mibi.sce
+```
+
+
+```{r}
+cat("Patients information")
+table(mibi.sce$SampleID)
+
+cat("Cell types informaton")
+# table(mibi.sce$tumor_group)
+# table(mibi.sce$immune_group)
+
+# rename the cell types
+mibi.sce$cellTypes <- ifelse(as.character(mibi.sce$immune_group) != "not immune",
+                             as.character(mibi.sce$immune_group),
+                             as.character(mibi.sce$tumor_group))
+
+table(mibi.sce$cellTypes)
+
+mibi.sce$cellTypes_group <- ifelse(as.character(mibi.sce$immune_group) != "not immune",
+                                   "Micro-environment",
+                                   "Tumour")
+
+selected_chanel_mibi <- rownames(mibi.sce)[rowData(mibi.sce)$is_protein == 1]
+
+```
+
+
+```{r}
+# color for mibi cell types
+cellTypes_group_mibi_color <- tableau_color_pal("Tableau 10")(length(unique(mibi.sce$cellTypes_group)))
+cellTypes_group_mibi_color <- c(cellTypes_group_mibi_color, "black")
+names(cellTypes_group_mibi_color) <- c(unique(mibi.sce$cellTypes_group), "Background")
+
+cellTypes_mibi_color <- tableau_color_pal("Classic 20")(length(unique(mibi.sce$cellTypes)))
+cellTypes_mibi_color <- c(cellTypes_mibi_color, "black")
+names(cellTypes_mibi_color) <- c(unique(mibi.sce$cellTypes), "Background")
+```
+
+
+
+Visualising all cells using UMAP
+
+```{r}
+## Dimension Reduction using UMAP
+mibi.sce <- runUMAP(mibi.sce, exprs_values = "mibi_exprs", 
+                    subset_row = selected_chanel_mibi)
+g1 <- plotUMAP(mibi.sce, colour_by = "cellTypes") +
+    theme(aspect.ratio = 1)
+g2 <- plotUMAP(mibi.sce, colour_by = "cellTypes_group") +
+    theme(aspect.ratio = 1)
+g3 <- plotUMAP(mibi.sce, colour_by = "SampleID") +
+    theme(aspect.ratio = 1)
+
+grid.arrange(g1, g2, g3, ncol = 2)
+```
+
+
+
+Cell type composition 
+
+```{r fig.height=8}
+df_mibi <- data.frame(colData(mibi.sce))
+
+g1 <- ggplot(df_mibi, aes(x = SampleID, fill = cellTypes)) +
+    geom_bar() +
+    theme_bw() +
+    scale_fill_manual(values = cellTypes_mibi_color) +
+    theme(legend.position = "right")
+
+g2 <- ggplot(df_mibi, aes(x = SampleID, fill = cellTypes_group)) +
+    geom_bar() +
+    theme_bw() +
+    scale_fill_manual(values = cellTypes_group_mibi_color) +
+    theme(legend.position = "right")
+
+grid.arrange(g1, g2, ncol = 2)
+```
+
+
+<!-- ## Jackson et al. -->
+
+<!-- ```{r eval = FALSE} -->
+<!-- source("basel_preprocessing.R") -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- sc_mat <- readRDS("data/basel_sc_mat.rds") -->
+<!-- pg <- readRDS("data/basel_pg.rds") -->
+<!-- meta <- readRDS("data/basel_meta.rds") -->
+<!-- selected_chanel <- readRDS("data/basel_selected_chanel.rds") -->
+<!-- dim(sc_mat) -->
+
+
+<!-- sc_mat_norm <- apply(sc_mat, 2, scale) -->
+<!-- ``` -->
+
+
+<!-- ```{r eval = FALSE} -->
+<!-- umap <- uwot::umap(sc_mat_norm[, selected_chanel]) -->
+<!-- saveRDS(umap, file = "data/basel_umap.rds") -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+<!-- # color for mibi cell types -->
+
+<!-- cellTypes_basel_color <- sort(c(tableau_color_pal("Classic 20")(20), -->
+<!--                                 tableau_color_pal("Summer")(5))) -->
+<!-- cellTypes_basel_color <- c(cellTypes_basel_color, "black") -->
+<!-- names(cellTypes_basel_color) <- c(unique(pg$cluster_name), "Background") -->
+<!-- ``` -->
+
+
+<!-- Visualising all cells using UMAP -->
+
+<!-- ```{r fig.height=8} -->
+<!-- basel_umap <- readRDS("data/basel_umap.rds") -->
+<!-- library(scattermore) -->
+
+<!-- pg$UMAP1 <- basel_umap[, 1] -->
+<!-- pg$UMAP2 <- basel_umap[, 2] -->
+<!-- g1 <- ggplot(pg, aes(x = UMAP1, y = UMAP2, color = cluster_name)) +  -->
+<!--   geom_scattermore() + -->
+<!--   theme_bw() + -->
+<!--   theme(aspect.ratio = 1) + -->
+<!--   scale_color_manual(values = cellTypes_basel_color) + -->
+<!--   labs(color = "Cell Type") -->
+<!-- g1 -->
+
+<!-- g2 <- ggplot(pg, aes(x = UMAP1, y = UMAP2, color = cluster_type)) +  -->
+<!--   geom_scattermore() + -->
+<!--   theme_bw() + -->
+<!--   theme(aspect.ratio = 1) + -->
+<!--   scale_color_tableau() + -->
+<!--   labs(color = "Cell Type") -->
+<!-- g2 -->
+<!-- ``` -->
+
+
+<!-- Cell type composition  -->
+
+<!-- ```{r fig.height=8} -->
+<!-- df_basel <- data.frame(pg) -->
+
+<!-- g1 <- ggplot(df_basel, aes(x = core, fill = cluster_name)) + -->
+<!--   geom_bar() + -->
+<!--   theme_bw() + -->
+<!--   scale_fill_manual(values = cellTypes_basel_color) + -->
+<!--   theme(legend.position = "right", -->
+<!--         axis.text.x = element_blank()) -->
+<!-- g1 -->
+
+<!-- g2 <- ggplot(df_basel, aes(x = core, fill = cluster_type)) + -->
+<!--   geom_bar() + -->
+<!--   theme_bw() + -->
+<!--   scale_fill_tableau() + -->
+<!--   theme(legend.position = "right", -->
+<!--         axis.text.x = element_blank()) -->
+<!-- g2 -->
+<!-- ``` -->
+
+
+
+<!-- # Overlapped features between two datasets -->
+
+<!-- ```{r} -->
+<!-- # intersect(colnames(sc_mat), rownames(mibi.sce)) -->
+<!-- # colnames(sc_mat)[!colnames(sc_mat) %in% rownames(mibi.sce)] -->
+<!-- rownames(mibi.sce)[!rownames(mibi.sce) %in% colnames(sc_mat)] -->
+<!-- rownames(mibi.sce)[rownames(mibi.sce) == "phospho-S6"] <- "pS6" -->
+<!-- rownames(mibi.sce)[rownames(mibi.sce) == "CD31"] <- "vWF" -->
+<!-- rownames(mibi.sce)[rownames(mibi.sce) == "Pan-Keratin"] <- "panCK" -->
+<!-- common_anti <- intersect(colnames(sc_mat), rownames(mibi.sce)) -->
+<!-- cat("Common protein between two datasets") -->
+<!-- common_anti -->
+<!-- length(common_anti)  -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- mibi_exprs <- assay(mibi.sce, "mibi_exprs") -->
+<!-- mibi_exprs_common <- mibi_exprs[common_anti, ] -->
+<!-- sc_mat_common <- t(sc_mat_norm[, common_anti]) -->
+<!-- ``` -->
+
+
+
+<!-- ```{r eval = FALSE} -->
+<!-- umap_common <- uwot::umap(t(sc_mat_common)) -->
+<!-- saveRDS(umap_common, file = "../../sc-targeted-proteomics/output/basel_umap_common.rds") -->
+
+<!-- umap_mibi_common <- uwot::umap(t(mibi_exprs_common)) -->
+<!-- saveRDS(umap_mibi_common, file = "../../sc-targeted-proteomics/output/mibi_umap_common.rds") -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+<!-- basel_umap_common <- readRDS("../../sc-targeted-proteomics/output/basel_umap_common.rds") -->
+
+<!-- pg$UMAP1_common <- basel_umap_common[, 1] -->
+<!-- pg$UMAP2_common <- basel_umap_common[, 2] -->
+<!-- g1 <- ggplot(pg, aes(x = UMAP1_common, y = UMAP2_common, color = cluster_name)) +  -->
+<!--   geom_scattermore() + -->
+<!--   theme_bw() + -->
+<!--   theme(aspect.ratio = 1) + -->
+<!--   scale_color_manual(values = cellTypes_basel_color) + -->
+<!--   labs(color = "Cell Type") -->
+<!-- g1 -->
+
+<!-- g2 <- ggplot(pg, aes(x = UMAP1_common, y = UMAP2_common, color = cluster_type)) +  -->
+<!--   geom_scattermore() + -->
+<!--   theme_bw() + -->
+<!--   theme(aspect.ratio = 1) + -->
+<!--   scale_color_tableau() + -->
+<!--   labs(color = "Cell Type") -->
+
+<!-- g2 -->
+<!-- ``` -->
+
+
+
+<!-- ```{r} -->
+<!-- mibi_umap_common <- readRDS("../../sc-targeted-proteomics/output/mibi_umap_common.rds") -->
+
+<!-- df_mibi$UMAP1_common <- mibi_umap_common[, 1] -->
+<!-- df_mibi$UMAP2_common <- mibi_umap_common[, 2] -->
+<!-- g1 <- ggplot(df_mibi, aes(x = UMAP1_common, y = UMAP2_common, color = cellTypes)) +  -->
+<!--   geom_scattermore() + -->
+<!--   theme_bw() + -->
+<!--   theme(aspect.ratio = 1) + -->
+<!--   scale_color_manual(values = cellTypes_mibi_color) + -->
+<!--   labs(color = "Cell Type") -->
+<!-- g1 -->
+
+<!-- g2 <- ggplot(df_mibi, aes(x = UMAP1_common, y = UMAP2_common, color = cellTypes_group)) +  -->
+<!--   geom_scattermore() + -->
+<!--   theme_bw() + -->
+<!--   theme(aspect.ratio = 1) + -->
+<!--   scale_color_tableau() + -->
+<!--   labs(color = "Cell Type") -->
+
+<!-- g2 -->
+<!-- ``` -->
+
+
+
+# Session Information
+
+```{r}
+sessionInfo()
+```
+
+
+
+
