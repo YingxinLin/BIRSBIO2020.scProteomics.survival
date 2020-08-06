@@ -37,6 +37,7 @@ library(ggpubr)
 library(spatstat)
 library(ape)
 library(viridis)
+library(ggthemes)
 source("../R/image_analysis_functions.R")
 ```
 

@@ -364,7 +364,7 @@ fit_ki67 <- survfit( Surv(SurvivalDays, Censoring) ~ ki67_class + STAGE,
 
 ggsurvplot(fit_ki67, data = meta_patients,
            ggtheme = theme_bw() +   theme(aspect.ratio = 0.8),
-           palette = tableau_color_pal("Tableau 20")(6)[c(6, 2, 4, 1, 3)],
+           palette = tableau_color_pal("Tableau 20")(6)[c(6, 2, 4, 1, 3, 5)],
            pval = TRUE) 
 
 
