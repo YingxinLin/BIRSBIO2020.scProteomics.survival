@@ -93,7 +93,7 @@ r <- raster(str_name)
 # create an rater object
 ```
 
-```{r}
+```{r eval = FALSE}
 str_name <- "data/p34_labeledcellData.tiff"
 
 
@@ -152,7 +152,7 @@ ggarrange(g_cellGroup, g_cellTypes, ncol = 2, nrow = 1, align = "hv")
 
 ## Create `ppp` object
 
-```{r}
+```{r eval = FALSE}
 coord_r <- rasterToPoints(r)
 center_r_x <- aggregate(coord_r[, 1], list(coord_r[, 3]), median)
 group <- center_r_x$Group.1
@@ -196,7 +196,7 @@ cell_points_cts <- ppp(x = center_r[, 1], y = center_r[, 2],
 
 ## Moran's I
 
-```{r}
+```{r eval = FALSE}
 d <- pairdist(cell_points_cts, squared = FALSE)
 diag(d) <- Inf
 
@@ -217,7 +217,7 @@ sort(moran_cor)
 ```
 
 
-```{r}
+```{r eval = FALSE}
 exprsMat_in_raster <- apply(exprsMat, 1, function(x) {
   mapValueToCoord(r, 
                   p_sce$cellLabelInImage,
@@ -250,12 +250,12 @@ ggarrange(g_MPO, g_CD8, align = "hv", ncol = 2)
 
 ## Nearest Neighbour Correlation
 
-```{r}
+```{r eval = FALSE}
 nncorr_protein <- nncorr(cell_points_cts)["correlation", ]
 nncorr_protein
 ```
 
-```{r}
+```{r eval = FALSE}
 
 nn_which_res <- nnwhich(cell_points_cts)
 
@@ -287,7 +287,7 @@ ggarrange(g1, g2, ncol = 2, nrow = 1, align = "hv")
 
 ## Cell type interaction composition
 
-```{r}
+```{r eval = FALSE}
 tab <- table(center_r[keep, ]$cellTypes)
 cellTypes_toTest <- names(tab[which(tab > 10)])
 cellTypes_pair <- expand.grid(cellTypes_toTest, cellTypes_toTest,
@@ -319,7 +319,7 @@ sort(nn_list_cellTypes/sum(nn_list_cellTypes), decreasing = TRUE)[1:10]
 
 ## L function
 
-```{r}
+```{r eval = FALSE}
 
 print("Calculate L'stats (cellType1)")
 
@@ -339,7 +339,7 @@ names(L_patient) <- paste(cellTypes_pair[, 1], cellTypes_pair[, 2], sep = "_")
 
 
 
-```{r}
+```{r eval = FALSE}
 
 
 L <- spatstat::Lcross(cell_points, 
